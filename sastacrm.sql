@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 08, 2023 at 05:29 PM
+-- Generation Time: Dec 08, 2023 at 05:38 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -206,7 +206,7 @@ CREATE TABLE `transactions` (
 CREATE TABLE `user` (
   `ID` int(11) NOT NULL,
   `FirstName` varchar(30) NOT NULL,
-  `LastName` int(30) NOT NULL,
+  `LastName` varchar(30) NOT NULL,
   `Email` varchar(50) NOT NULL,
   `UserName` varchar(50) NOT NULL,
   `Role` int(25) NOT NULL,
