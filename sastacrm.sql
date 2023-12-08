@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 08, 2023 at 06:02 PM
+-- Generation Time: Dec 08, 2023 at 06:19 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -24,15 +24,26 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `actimemo`
+--
+
+CREATE TABLE `actimemo` (
+  `ActID` int(255) NOT NULL,
+  `NoteID` int(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `activities`
 --
 
 CREATE TABLE `activities` (
   `ActID` int(255) NOT NULL,
+  `ID` int(255) NOT NULL,
   `Subject` int(100) NOT NULL,
   `Date` varchar(30) NOT NULL,
   `Time` varchar(50) NOT NULL,
-  `NoteID` int(255) NOT NULL,
   `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `UpdateAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -198,9 +209,19 @@ CREATE TABLE `interactions` (
   `ID` int(255) NOT NULL,
   `Date` varchar(50) NOT NULL,
   `Time` varchar(50) NOT NULL,
-  `NoteID` int(255) NOT NULL,
   `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `UpdateAt` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `intermemo`
+--
+
+CREATE TABLE `intermemo` (
+  `InterID` int(255) NOT NULL,
+  `NoteID` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -211,10 +232,28 @@ CREATE TABLE `interactions` (
 
 CREATE TABLE `memos` (
   `NoteID` int(255) NOT NULL,
-  `Title` int(100) NOT NULL,
+  `Title` varchar(100) NOT NULL,
   `Content` varchar(100) NOT NULL,
   `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `UpdateAt` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `memos`
+--
+
+INSERT INTO `memos` (`NoteID`, `Title`, `Content`, `CreatedAt`, `UpdateAt`) VALUES
+(12, 'TEERER', 'rwert', '2023-12-08 17:05:52', '2023-12-08 17:05:52');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `oppmemo`
+--
+
+CREATE TABLE `oppmemo` (
+  `OppID` int(11) NOT NULL,
+  `NoteID` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -228,7 +267,6 @@ CREATE TABLE `opportunities` (
   `ID` int(255) NOT NULL,
   `OppurtunityName` varchar(50) NOT NULL,
   `Revenue` int(100) NOT NULL,
-  `NoteID` int(11) NOT NULL,
   `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `UpdateAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -303,10 +341,18 @@ INSERT INTO `user` (`ID`, `FirstName`, `LastName`, `Email`, `UserName`, `Role`, 
 --
 
 --
+-- Indexes for table `actimemo`
+--
+ALTER TABLE `actimemo`
+  ADD KEY `OPP` (`ActID`),
+  ADD KEY `NoteID` (`NoteID`);
+
+--
 -- Indexes for table `activities`
 --
 ALTER TABLE `activities`
-  ADD KEY `Activities_FK_notes` (`NoteID`);
+  ADD PRIMARY KEY (`ActID`),
+  ADD KEY `Activities_FK_ID` (`ID`);
 
 --
 -- Indexes for table `companies`
@@ -357,8 +403,14 @@ ALTER TABLE `customerprodcuts`
 --
 ALTER TABLE `interactions`
   ADD PRIMARY KEY (`InterID`),
-  ADD KEY `Interactions_FK_CUS` (`ID`),
-  ADD KEY `Interactions_FK_NOTES` (`NoteID`);
+  ADD KEY `Interactions_FK_CUS` (`ID`);
+
+--
+-- Indexes for table `intermemo`
+--
+ALTER TABLE `intermemo`
+  ADD KEY `INterOOP` (`InterID`),
+  ADD KEY `JNOTE` (`NoteID`);
 
 --
 -- Indexes for table `memos`
@@ -367,12 +419,18 @@ ALTER TABLE `memos`
   ADD PRIMARY KEY (`NoteID`);
 
 --
+-- Indexes for table `oppmemo`
+--
+ALTER TABLE `oppmemo`
+  ADD KEY `OOP` (`NoteID`),
+  ADD KEY `CUS` (`OppID`);
+
+--
 -- Indexes for table `opportunities`
 --
 ALTER TABLE `opportunities`
   ADD PRIMARY KEY (`OppID`),
-  ADD KEY `Opp_FK_CUS` (`ID`),
-  ADD KEY `Opp_FK_NOTES` (`NoteID`);
+  ADD KEY `Opp_FK_CUS` (`ID`);
 
 --
 -- Indexes for table `product`
@@ -396,6 +454,12 @@ ALTER TABLE `user`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `activities`
+--
+ALTER TABLE `activities`
+  MODIFY `ActID` int(255) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `companies`
@@ -431,7 +495,7 @@ ALTER TABLE `interactions`
 -- AUTO_INCREMENT for table `memos`
 --
 ALTER TABLE `memos`
-  MODIFY `NoteID` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `NoteID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `opportunities`
@@ -462,10 +526,17 @@ ALTER TABLE `user`
 --
 
 --
+-- Constraints for table `actimemo`
+--
+ALTER TABLE `actimemo`
+  ADD CONSTRAINT `NoteID` FOREIGN KEY (`NoteID`) REFERENCES `memos` (`NoteID`),
+  ADD CONSTRAINT `OPP` FOREIGN KEY (`ActID`) REFERENCES `activities` (`ActID`);
+
+--
 -- Constraints for table `activities`
 --
 ALTER TABLE `activities`
-  ADD CONSTRAINT `Activities_FK_notes` FOREIGN KEY (`NoteID`) REFERENCES `memos` (`NoteID`);
+  ADD CONSTRAINT `Activities_FK_ID` FOREIGN KEY (`ID`) REFERENCES `customer` (`ID`);
 
 --
 -- Constraints for table `customer`
@@ -507,15 +578,27 @@ ALTER TABLE `customerprodcuts`
 -- Constraints for table `interactions`
 --
 ALTER TABLE `interactions`
-  ADD CONSTRAINT `Interactions_FK_CUS` FOREIGN KEY (`ID`) REFERENCES `customer` (`ID`),
-  ADD CONSTRAINT `Interactions_FK_NOTES` FOREIGN KEY (`NoteID`) REFERENCES `memos` (`NoteID`);
+  ADD CONSTRAINT `Interactions_FK_CUS` FOREIGN KEY (`ID`) REFERENCES `customer` (`ID`);
+
+--
+-- Constraints for table `intermemo`
+--
+ALTER TABLE `intermemo`
+  ADD CONSTRAINT `INterOOP` FOREIGN KEY (`InterID`) REFERENCES `interactions` (`InterID`),
+  ADD CONSTRAINT `JNOTE` FOREIGN KEY (`NoteID`) REFERENCES `memos` (`NoteID`);
+
+--
+-- Constraints for table `oppmemo`
+--
+ALTER TABLE `oppmemo`
+  ADD CONSTRAINT `CUS` FOREIGN KEY (`OppID`) REFERENCES `opportunities` (`OppID`),
+  ADD CONSTRAINT `OOP` FOREIGN KEY (`NoteID`) REFERENCES `memos` (`NoteID`);
 
 --
 -- Constraints for table `opportunities`
 --
 ALTER TABLE `opportunities`
-  ADD CONSTRAINT `Opp_FK_CUS` FOREIGN KEY (`ID`) REFERENCES `customer` (`ID`),
-  ADD CONSTRAINT `Opp_FK_NOTES` FOREIGN KEY (`NoteID`) REFERENCES `memos` (`NoteID`);
+  ADD CONSTRAINT `Opp_FK_CUS` FOREIGN KEY (`ID`) REFERENCES `customer` (`ID`);
 
 --
 -- Constraints for table `transactions`
