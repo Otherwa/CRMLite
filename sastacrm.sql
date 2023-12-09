@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 08, 2023 at 06:19 PM
+-- Generation Time: Dec 09, 2023 at 07:39 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sastacrm`
+-- Database: `sastacrm_backup`
 --
 
 -- --------------------------------------------------------
@@ -29,7 +29,9 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `actimemo` (
   `ActID` int(255) NOT NULL,
-  `NoteID` int(255) NOT NULL
+  `NoteID` int(255) NOT NULL,
+  `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
+  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -41,11 +43,9 @@ CREATE TABLE `actimemo` (
 CREATE TABLE `activities` (
   `ActID` int(255) NOT NULL,
   `ID` int(255) NOT NULL,
-  `Subject` int(100) NOT NULL,
+  `Subject` varchar(100) NOT NULL,
   `Date` varchar(30) NOT NULL,
-  `Time` varchar(50) NOT NULL,
-  `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
-  `UpdateAt` timestamp NOT NULL DEFAULT current_timestamp()
+  `Time` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -63,17 +63,6 @@ CREATE TABLE `companies` (
   `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `companies`
---
-
-INSERT INTO `companies` (`CompanyID`, `CompanyName`, `CompanyEmail`, `Location`, `CreatedAt`, `UpdatedAt`) VALUES
-(1, 'ABC Corp', 'info@abccorp.com', 'New York', '2023-12-08 16:40:33', '2023-12-08 16:40:33'),
-(2, 'XYZ Ltd', 'contact@xyzltd.com', 'London', '2023-12-08 16:40:33', '2023-12-08 16:40:33'),
-(3, '123 Industries', 'info@123industries.com', 'Los Angeles', '2023-12-08 16:40:33', '2023-12-08 16:40:33'),
-(4, 'Tech Solutions', 'support@techsolutions.com', 'San Francisco', '2023-12-08 16:40:33', '2023-12-08 16:40:33'),
-(5, 'Global Innovations', 'info@globalinnovations.com', 'Tokyo', '2023-12-08 16:40:33', '2023-12-08 16:40:33');
-
 -- --------------------------------------------------------
 
 --
@@ -88,17 +77,6 @@ CREATE TABLE `customer` (
   `CompanyID` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `customer`
---
-
-INSERT INTO `customer` (`ID`, `FirstName`, `LastName`, `Email`, `CompanyID`) VALUES
-(1, 'Alice', 'Johnson', 'alice.johnson@email.', 1),
-(2, 'Bob', 'Smith', 'bob.smith@email.com', 2),
-(3, 'Charlie', 'Williams', 'charlie.williams@ema', 1),
-(4, 'David', 'Brown', 'david.brown@email.co', 3),
-(5, 'Eva', 'Jones', 'eva.jones@email.com', 2);
-
 -- --------------------------------------------------------
 
 --
@@ -109,17 +87,6 @@ CREATE TABLE `customercontact` (
   `ContactID` int(255) NOT NULL,
   `ID` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `customercontact`
---
-
-INSERT INTO `customercontact` (`ContactID`, `ID`) VALUES
-(1012, 1),
-(1212, 1),
-(2123, 3),
-(4123, 4),
-(5354, 5);
 
 -- --------------------------------------------------------
 
@@ -132,16 +99,6 @@ CREATE TABLE `customercontactaddresses` (
   `Addresses` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `customercontactaddresses`
---
-
-INSERT INTO `customercontactaddresses` (`ID`, `Addresses`) VALUES
-(1, '123 Main St, CityA, CountryA'),
-(3, '789 Pine St, CityC, CountryC'),
-(1, '101 Maple St, CityD, CountryD'),
-(4, '202 Elm St, CityE, CountryE');
-
 -- --------------------------------------------------------
 
 --
@@ -152,16 +109,6 @@ CREATE TABLE `customercontactphones` (
   `ID` int(255) NOT NULL,
   `Phone` varchar(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `customercontactphones`
---
-
-INSERT INTO `customercontactphones` (`ID`, `Phone`) VALUES
-(1, '123-456-789'),
-(3, '555-123-456'),
-(4, '333-888-999'),
-(5, '777-444-555');
 
 -- --------------------------------------------------------
 
@@ -174,16 +121,6 @@ CREATE TABLE `customerpaydetails` (
   `AdharNo` varchar(50) NOT NULL,
   `PanNo` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `customerpaydetails`
---
-
-INSERT INTO `customerpaydetails` (`ID`, `AdharNo`, `PanNo`) VALUES
-(1, '1234-5678-9876', 'ABCDE1234F'),
-(3, '9876-5432-6789', 'PQRS5678D'),
-(4, '4321-8765-9876', 'LMNO8765E'),
-(5, '8765-4321-6789', 'JKLM4321F');
 
 -- --------------------------------------------------------
 
@@ -207,10 +144,9 @@ CREATE TABLE `customerprodcuts` (
 CREATE TABLE `interactions` (
   `InterID` int(255) NOT NULL,
   `ID` int(255) NOT NULL,
+  `Subject` varchar(100) NOT NULL,
   `Date` varchar(50) NOT NULL,
-  `Time` varchar(50) NOT NULL,
-  `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
-  `UpdateAt` timestamp NOT NULL DEFAULT current_timestamp()
+  `Time` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -221,7 +157,9 @@ CREATE TABLE `interactions` (
 
 CREATE TABLE `intermemo` (
   `InterID` int(255) NOT NULL,
-  `NoteID` int(255) NOT NULL
+  `NoteID` int(255) NOT NULL,
+  `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
+  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -233,17 +171,8 @@ CREATE TABLE `intermemo` (
 CREATE TABLE `memos` (
   `NoteID` int(255) NOT NULL,
   `Title` varchar(100) NOT NULL,
-  `Content` varchar(100) NOT NULL,
-  `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
-  `UpdateAt` timestamp NOT NULL DEFAULT current_timestamp()
+  `Content` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `memos`
---
-
-INSERT INTO `memos` (`NoteID`, `Title`, `Content`, `CreatedAt`, `UpdateAt`) VALUES
-(12, 'TEERER', 'rwert', '2023-12-08 17:05:52', '2023-12-08 17:05:52');
 
 -- --------------------------------------------------------
 
@@ -253,7 +182,9 @@ INSERT INTO `memos` (`NoteID`, `Title`, `Content`, `CreatedAt`, `UpdateAt`) VALU
 
 CREATE TABLE `oppmemo` (
   `OppID` int(11) NOT NULL,
-  `NoteID` int(255) NOT NULL
+  `NoteID` int(255) NOT NULL,
+  `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
+  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -266,9 +197,7 @@ CREATE TABLE `opportunities` (
   `OppID` int(255) NOT NULL,
   `ID` int(255) NOT NULL,
   `OppurtunityName` varchar(50) NOT NULL,
-  `Revenue` int(100) NOT NULL,
-  `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
-  `UpdateAt` timestamp NOT NULL DEFAULT current_timestamp()
+  `Revenue` int(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -283,17 +212,6 @@ CREATE TABLE `product` (
   `Price` int(50) NOT NULL,
   `Description` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `product`
---
-
-INSERT INTO `product` (`ProductID`, `ProductName`, `Price`, `Description`) VALUES
-(1, 'IT Consulting Service', 100, 'Professional IT consulting for businesses'),
-(2, 'Web Development Service', 50, 'Custom web development for your online presence'),
-(3, 'Digital Marketing Service', 30, 'Strategic digital marketing services to boost your brand'),
-(4, 'Cloud Hosting Service', 80, 'Secure and scalable cloud hosting solutions'),
-(5, 'Graphic Design Service', 40, 'Creative graphic design services for marketing materials');
 
 -- --------------------------------------------------------
 
@@ -326,17 +244,6 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `user`
---
-
-INSERT INTO `user` (`ID`, `FirstName`, `LastName`, `Email`, `UserName`, `Role`, `Password`) VALUES
-(1, 'John', 'Doe', 'john.doe@email.com', 'john_doe', 1, 'password123'),
-(2, 'Jane', 'Smith', 'jane.smith@email.com', 'jane_smith', 2, 'securepass'),
-(3, 'Bob', 'Johnson', 'bob.johnson@email.com', 'bob_johnson', 1, 'pass123'),
-(4, 'Alice', 'Williams', 'alice.williams@email.com', 'alice_williams', 3, 'strongpass'),
-(5, 'Charlie', 'Brown', 'charlie.brown@email.com', 'charlie_brown', 4, 'password456');
-
---
 -- Indexes for dumped tables
 --
 
@@ -344,7 +251,7 @@ INSERT INTO `user` (`ID`, `FirstName`, `LastName`, `Email`, `UserName`, `Role`, 
 -- Indexes for table `actimemo`
 --
 ALTER TABLE `actimemo`
-  ADD KEY `OPP` (`ActID`),
+  ADD PRIMARY KEY (`ActID`,`NoteID`),
   ADD KEY `NoteID` (`NoteID`);
 
 --
@@ -396,6 +303,7 @@ ALTER TABLE `customerpaydetails`
 -- Indexes for table `customerprodcuts`
 --
 ALTER TABLE `customerprodcuts`
+  ADD PRIMARY KEY (`PurchaseID`),
   ADD KEY `CustomerProducts_FK_PRODID` (`ProdcutID`);
 
 --
@@ -409,7 +317,7 @@ ALTER TABLE `interactions`
 -- Indexes for table `intermemo`
 --
 ALTER TABLE `intermemo`
-  ADD KEY `INterOOP` (`InterID`),
+  ADD PRIMARY KEY (`InterID`,`NoteID`),
   ADD KEY `JNOTE` (`NoteID`);
 
 --
@@ -422,8 +330,8 @@ ALTER TABLE `memos`
 -- Indexes for table `oppmemo`
 --
 ALTER TABLE `oppmemo`
-  ADD KEY `OOP` (`NoteID`),
-  ADD KEY `CUS` (`OppID`);
+  ADD PRIMARY KEY (`OppID`,`NoteID`),
+  ADD KEY `OOP` (`NoteID`);
 
 --
 -- Indexes for table `opportunities`
@@ -459,7 +367,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `activities`
 --
 ALTER TABLE `activities`
-  MODIFY `ActID` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `ActID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1006;
 
 --
 -- AUTO_INCREMENT for table `companies`
@@ -477,7 +385,7 @@ ALTER TABLE `customer`
 -- AUTO_INCREMENT for table `customercontact`
 --
 ALTER TABLE `customercontact`
-  MODIFY `ContactID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5355;
+  MODIFY `ContactID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5356;
 
 --
 -- AUTO_INCREMENT for table `customerpaydetails`
@@ -486,22 +394,28 @@ ALTER TABLE `customerpaydetails`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `customerprodcuts`
+--
+ALTER TABLE `customerprodcuts`
+  MODIFY `PurchaseID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1221;
+
+--
 -- AUTO_INCREMENT for table `interactions`
 --
 ALTER TABLE `interactions`
-  MODIFY `InterID` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `InterID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3006;
 
 --
 -- AUTO_INCREMENT for table `memos`
 --
 ALTER TABLE `memos`
-  MODIFY `NoteID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `NoteID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `opportunities`
 --
 ALTER TABLE `opportunities`
-  MODIFY `OppID` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `OppID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2006;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -513,7 +427,7 @@ ALTER TABLE `product`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `TransactionID` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `TransactionID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1006;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -604,7 +518,7 @@ ALTER TABLE `opportunities`
 -- Constraints for table `transactions`
 --
 ALTER TABLE `transactions`
-  ADD CONSTRAINT `TransactionsFK_PURCHASE` FOREIGN KEY (`PurchaseID`) REFERENCES `customerprodcuts` (`ProdcutID`);
+  ADD CONSTRAINT `TransactionsFK_PURCHASE` FOREIGN KEY (`PurchaseID`) REFERENCES `customerprodcuts` (`PurchaseID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
